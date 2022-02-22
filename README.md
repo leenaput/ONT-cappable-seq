@@ -43,14 +43,36 @@ do
 	echo "processing barcode$i";
 
 	cdna_classifier.py \
-  -r ONT-cappable-seq/fastq_data/pychopped/barcode$i/report.pdf \
-  -u ONT-cappable-seq/fastq_data/pychopped/barcode$i/unclassified.fastq \
-  -w ONT-cappable-seq/fastq_data/pychopped/barcode$i/rescued.fastq \
-  ONT-cappable-seq/fastq_data/raw/barcode$i/barcode$i.fastq \
-  ONT-cappable-seq/fastq_data/pychopped/barcode$i/pychopped_barcode$i.fastq 
+ 	 -r ONT-cappable-seq/fastq_data/pychopped/barcode$i/report.pdf \
+  	-u ONT-cappable-seq/fastq_data/pychopped/barcode$i/unclassified.fastq \
+  	-w ONT-cappable-seq/fastq_data/pychopped/barcode$i/rescued.fastq \
+  	ONT-cappable-seq/fastq_data/raw/barcode$i/barcode$i.fastq \
+  	ONT-cappable-seq/fastq_data/pychopped/barcode$i/pychopped_barcode$i.fastq 
   
 done 
 ```
 
 
-  
+Next, the full-length pychopped reads were trimmed with Cutadapt (v2.7) to remove 3' polyA stretches and sequence remnants of the strands-switching primers. 
+
+```bash
+#!/bin/bash
+
+for i in $(seq -f %02g 1 12)
+do
+
+	echo "processing barcode$i";
+	
+	#remove polyA tail from 3' end
+	cutadapt -a "A{10}" -j 0 \
+	-o ONT-cappable-seq/fastq_data/cut_AAA/barcode$i/barcode$i.cutadapt.fastq \
+	ONT-cappable-seq/fastq_data/pychopped/barcode$i/pychopped_barcode$i.fastq 
+
+
+  	#remove SSP primer from 5' end
+	cutadapt -g "TTTCTGTTGGTGCTGATATTGCTGGG" -j 0 \
+	-o ONT-cappable-seq/fastq_data/cut_SSP/barcode$i/barcode$i.cutadapt_SSP.fastq \
+	ONT-cappable-seq/fastq_data/cut_AAA/barcode$i/barcode$i.cutadapt.fastq 
+
+done
+```
