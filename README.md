@@ -76,3 +76,6 @@ do
 
 done
 ```
+### **Read mapping to reference genomes**
+
+Minimap2 (v2.17) was used to map the trimmed reads to the reference genomes and the RNA spike-in sequence. In our study, we used the reference genome of Pseudomonas aeruginosa phage LUZ7 (NC_013691.1) and bacterial host P. aeruginosa strain US449 (. The sequences were concatenated into a single fasta file, references.fasta, which is provided on this page.   
