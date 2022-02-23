@@ -78,4 +78,30 @@ done
 ```
 ### **Read mapping to reference genomes**
 
-Minimap2 (v2.17) was used to map the trimmed reads to the reference genomes and the RNA spike-in sequence. In our study, we used the reference genome of Pseudomonas aeruginosa phage LUZ7 (NC_013691.1) and bacterial host P. aeruginosa strain US449 (. The sequences were concatenated into a single fasta file, references.fasta, which is provided on this page.   
+Minimap2 (v2.17) was used to map the trimmed reads to the reference genomes and the RNA spike-in sequence. In our study, we used the reference genome of _Pseudomonas aeruginosa_ phage LUZ7 (NC_013691.1) and bacterial host _P. aeruginosa_ strain US449 (CP091880). The sequences were concatenated into a single fasta file, references.fasta, which is provided on this page.   
+
+```bash
+#!/bin/bash
+
+for i in $(seq -f %02g 1 12)
+do
+
+	echo "processing barcode$i";
+	
+	# make output directory to store mapping data
+	mkdir ONT-cappable-seq/mapped_data/mapped/barcode$i 
+	
+	# map reads to reference sequences using minimap2
+	minimap2 -ax map-ont -k14 --MD \
+	ONT-cappable-seq/genome_data/references.fasta \
+	ONT-cappable-seq/fastq_data/cutadaptSSP/barcode$i/barcode$i.cutadapt_SSP.fastq > ONT-cappable-seq/mapped_data/mapped/barcode$i/barcode$i.sam 
+	
+	# convert alignment format and assess read mapping metrics using samtools (v1.9)
+  	samtools view -bS ONT-cappable-seq/mapped_data/mapped/barcode$i/barcode$i.sam -o ONT-cappable-seq/mapped_data/mapped/barcode$i/barcode$i.bam
+        samtools sort -o ONT-cappable-seq/mapped_data/mapped/barcode$i/sorted_barcode$i.bam ONT-cappable-seq/mapped_data/mapped/barcode$i/barcode$i.bam
+	samtools index ONT-cappable-seq/mapped_data/mapped/barcode$i/sorted_barcode$i.bam
+	samtools flagstat ONT-cappable-seq/mapped_data/mapped/barcode$i/sorted_barcode$i.bam > ONT-cappable-seq/mapped_data/mapped/barcode$i/flagstat.txt
+	samtools idxstats ONT-cappable-seq/mapped_data/mapped/barcode$i/sorted_barcode$i.bam > ONT-cappable-seq/mapped_data/mapped/barcode$i/idxstats.txt
+
+done
+```
