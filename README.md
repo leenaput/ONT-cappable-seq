@@ -8,7 +8,7 @@ Total RNA was enriched for primary transcripts using an adapted version of the (
 
 ## **Data processing**
 
-Note: many of the different steps outlined in this workflow are inspired by the microbepore pipeline that was used for the analysis of prokaryotic Nanopore RNA-seq data (https://felixgrunberger.github.io/microbepore/).
+Note: many of the steps outlined in this workflow are inspired by the microbepore pipeline that was used for the analysis of prokaryotic Nanopore RNA-seq data (https://felixgrunberger.github.io/microbepore/).
 
 ### **Data navigation**
 
@@ -96,12 +96,42 @@ do
 	ONT-cappable-seq/genome_data/references.fasta \
 	ONT-cappable-seq/fastq_data/cutadaptSSP/barcode$i/barcode$i.cutadapt_SSP.fastq > ONT-cappable-seq/mapped_data/mapped/barcode$i/barcode$i.sam 
 	
+done
+```
+
+Next, samclip (v0.4.0) was used to exclude reads from the alignment that have more than 10 clipped bases on either side:
+
+```bash
+#!/bin/bash
+
+for i in $(seq -f %02g 1 12)
+do
+
+	samclip --max 10 --ref ONT-cappable-seq/genome_data/references.fasta < ONT-cappable-seq/mapped_data/mapped/barcode$i/barcode$i.sam >  ONT-cappable-	 seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sam
+	
 	# convert alignment format and assess read mapping metrics using samtools (v1.9)
-  	samtools view -bS ONT-cappable-seq/mapped_data/mapped/barcode$i/barcode$i.sam -o ONT-cappable-seq/mapped_data/mapped/barcode$i/barcode$i.bam
-        samtools sort -o ONT-cappable-seq/mapped_data/mapped/barcode$i/sorted_barcode$i.bam ONT-cappable-seq/mapped_data/mapped/barcode$i/barcode$i.bam
-	samtools index ONT-cappable-seq/mapped_data/mapped/barcode$i/sorted_barcode$i.bam
-	samtools flagstat ONT-cappable-seq/mapped_data/mapped/barcode$i/sorted_barcode$i.bam > ONT-cappable-seq/mapped_data/mapped/barcode$i/flagstat.txt
-	samtools idxstats ONT-cappable-seq/mapped_data/mapped/barcode$i/sorted_barcode$i.bam > ONT-cappable-seq/mapped_data/mapped/barcode$i/idxstats.txt
+  	samtools view -bS ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sam -o ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.bam
+        samtools sort -o ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sorted.bam ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.bam
+	samtools index ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sorted.bam
+	samtools flagstat ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sorted.bam > ONT-cappable-seq/mapped_data/clipped/barcode$i/flagstat.txt
+	samtools idxstats ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sorted.bam > ONT-cappable-seq/mapped_data/clipped/barcode$i/idxstats.txt
 
 done
 ```
+
+### **Read counting to genomic features**
+
+Next, featureCounts (v2.0.1) was used to assing the reads to the genomic features of the phage and the host. The gtf annotation files used are provided in this repository. 
+
+```bash
+#!/bin/bash
+
+for i in $(seq -f %02g 1 12)
+do
+
+	featureCounts -L -O -a ONT-cappable-seq/genome_data/US449.gtf \
+	ONT-cappable-seq/mapping_data/clipped/barcode$i/barcode$i.
+
+
+
+
