@@ -121,7 +121,7 @@ done
 
 ### **Read counting to genomic features**
 
-Next, featureCounts (v2.0.1) was used to assing the reads to the genomic features of the phage and the host. The gtf annotation files used are provided in this repository. 
+Next, featureCounts (v2.0.1) was used to assign the reads to the genomic features of the phage and the host. The gtf annotation files used are provided in this repository. 
 
 ```bash
 #!/bin/bash
