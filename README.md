@@ -193,6 +193,7 @@ do
 	grep -w "LUZ7" ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.peaks.oracle.narrowPeak.counts > ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.LUZ7.peaks.oracle.narrowPeak.counts 
 	
 	grep -w "LUZ7" ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.peaks.oracle.narrowPeak.counts > ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.LUZ7.peaks.oracle.narrowPeak.counts 
+	
 
 #add RPM values 
 	total_mapped=$(samtools view -c -F4 ONT-cappable-seq/mapped_data/clipped/barcode$i.clipped.sorted.bam)
@@ -207,6 +208,7 @@ do
 done
 ```
 
+After generating the peak tables, peaks were clustered 
 
 
 
