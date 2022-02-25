@@ -107,7 +107,7 @@ Next, samclip (v0.4.0) was used to exclude reads from the alignment that have mo
 for i in $(seq -f %02g 1 12)
 do
 
-	samclip --max 10 --ref ONT-cappable-seq/genome_data/references.fasta < ONT-cappable-seq/mapped_data/mapped/barcode$i/barcode$i.sam >  ONT-cappable-	 seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sam
+	samclip --max 10 --ref ONT-cappable-seq/genome_data/references.fasta < ONT-cappable-seq/mapped_data/mapped/barcode$i/barcode$i.sam > ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sam
 	
 	# convert alignment format and assess read mapping metrics using samtools (v1.9)
   	samtools view -bS ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sam -o ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.bam
@@ -128,9 +128,21 @@ Next, featureCounts (v2.0.1) was used to assing the reads to the genomic feature
 
 for i in $(seq -f %02g 1 12)
 do
-
+	mkdir ONT-cappable-seq/featurecount_data/barcode$i
 	featureCounts -L -O -a ONT-cappable-seq/genome_data/US449.gtf \
-	ONT-cappable-seq/mapping_data/clipped/barcode$i/barcode$i.
+	ONT-cappable-seq/mapping_data/clipped/barcode$i/barcode$i.clipped.sorted.bam \
+	-o ONT-cappable-seq/featurecount_data/barcode$i/US449 \
+	-t transcript
+	
+	featureCounts -L -O -a ONT-cappable-seq/genome_data/LUZ7.gtf \
+	ONT-cappable-seq/mapping_data/clipped/barcode$i/barcode$i.clipped.sorted.bam \
+	-o ONT-cappable-seq/featurecount_data/barcode$i/LUZ7 \
+	-t transcript
+	
+done
+```
+
+	
 
 
 
