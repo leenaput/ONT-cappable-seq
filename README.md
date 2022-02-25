@@ -164,7 +164,7 @@ do
 done
 ```
 
-These strand-specific input files were then used to find local maxima for 5' read ends using the termseq-peaks.py script, a previously pubslihed peak-calling tool (https://github.com/nichd-bspc/termseq-peaks). This tool generates output files in the narrowPeaks format. Peak coverage information was subsequently added using bedtools intersect. 
+These strand-specific input files were then used to find local maxima for 5' read ends using the termseq-peaks.py script, a previously published peak-calling tool (https://github.com/nichd-bspc/termseq-peaks). This tool generates output files in the narrowPeaks format. After filtering for phage data only, peak coverage information was  added using bedtools intersect. 
 
 
 ```bash
