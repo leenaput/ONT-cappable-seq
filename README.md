@@ -43,7 +43,7 @@ do
 	echo "processing barcode$i";
 
 	cdna_classifier.py \
- 	 -r ONT-cappable-seq/fastq_data/pychopped/barcode$i/report.pdf \
+ 	-r ONT-cappable-seq/fastq_data/pychopped/barcode$i/report.pdf \
   	-u ONT-cappable-seq/fastq_data/pychopped/barcode$i/unclassified.fastq \
   	-w ONT-cappable-seq/fastq_data/pychopped/barcode$i/rescued.fastq \
   	ONT-cappable-seq/fastq_data/raw/barcode$i/barcode$i.fastq \
@@ -179,18 +179,19 @@ do
 	termseq_peaks ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.bedgraph --peaks ONT-cappable-seq/boundary_data/TSS/barcode$i.5end.minus.peaks --strand -
 	
 #add counts
-bedtools intersect -wao \
--a ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.peaks.oracle.narrowPeak \
--b ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.bedgraph \
->  ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.peaks.oracle.narrowPeak.counts
+	bedtools intersect -wao \
+	-a ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.peaks.oracle.narrowPeak \
+	-b ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.bedgraph \
+	>  ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.peaks.oracle.narrowPeak.counts
 
-bedtools intersect -wao \
--a ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.peaks.oracle.narrowPeak \
--b ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.bedgraph \
->  ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.peaks.oracle.narrowPeak.counts
+	bedtools intersect -wao \
+	-a ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.peaks.oracle.narrowPeak \
+	-b ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.bedgraph \
+	>  ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.peaks.oracle.narrowPeak.counts
 
 done
 ```
+
 
 
 
