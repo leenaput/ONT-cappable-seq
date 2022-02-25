@@ -8,7 +8,7 @@ Total RNA was enriched for primary transcripts using an adapted version of the (
 
 ## **Data processing**
 
-Note: many of the steps outlined in this workflow are inspired by the microbepore pipeline that was used for the analysis of prokaryotic Nanopore RNA-seq data (https://felixgrunberger.github.io/microbepore/).
+Note: many of the steps outlined in this workflow are based on the microbepore pipeline that was used for the analysis of prokaryotic Nanopore RNA-seq data (https://felixgrunberger.github.io/microbepore/), with some modifications tailored to our ONT-cappable-seq approach. 
 
 ### **Data navigation**
 
@@ -26,7 +26,7 @@ ONT-cappable-seq/
 	- clipped
  - featurecount_data
  - boundary_data/
- 	- TSS
+ 	- TSS 	 
 	- TTS
 
         
@@ -142,8 +142,55 @@ do
 done
 ```
 
-	
+### **Identification of phage transcription start sites**
 
+For transcription start site (TSS) detection, we created strand-specific bed files from the bam files that indicate the number of reads that start at each genomic position of the phage genome. For this we used bedtools (v2.29.2).
+
+
+```bash
+#!/bin/bash
+
+# get 5end position for all reads in sorted bam file
+
+for i in $(seq -f %02g 1 12)
+do
+
+	echo "processing barcode$i"
+	mkdir ONT-cappable-seq/boundary_data/TSS/barcode$i
+	bedtools genomecov -ibam ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sorted.bam -bga -5 -strand - > ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.bedgraph
+
+	bedtools genomecov -ibam ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sorted.bam -bga -5 -strand + > ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.bedgraph
+
+done
+```
+
+These strand-specific input files were then used to find local maxima for 5' read ends using the termseq-peaks.py script, a previously pubslihed peak-calling tool (https://github.com/nichd-bspc/termseq-peaks). This tool generates output files in the narrowPeaks format. Peak coverage information was subsequently added using bedtools intersect. 
+
+
+```bash
+#!/bin/bash
+
+for i in $(seq -f %02g 1 12)
+do
+
+#determine peak positions
+
+	termseq_peaks ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.bedgraph --peaks ONT-cappable-seq/boundary_data/TSS/barcode$i.5end.plus.peaks --strand +
+	termseq_peaks ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.bedgraph --peaks ONT-cappable-seq/boundary_data/TSS/barcode$i.5end.minus.peaks --strand -
+	
+#add counts
+bedtools intersect -wao \
+-a ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.peaks.oracle.narrowPeak \
+-b ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.bedgraph \
+>  ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.peaks.oracle.narrowPeak.counts
+
+bedtools intersect -wao \
+-a ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.peaks.oracle.narrowPeak \
+-b ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.bedgraph \
+>  ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.peaks.oracle.narrowPeak.counts
+
+done
+```
 
 
 
