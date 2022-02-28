@@ -47,17 +47,21 @@ First, multiple fastq files were merged to a single fastq file per sample. The r
 ```bash
 #!/bin/bash
 
+WD=$(pwd)
+input=$WD/fastq_data/raw
+pychopped=$WD/pychopped
+
 for i in $(seq -f %02g 1 12)
 do
 
 	echo "processing barcode$i";
 
 	cdna_classifier.py \
- 	-r ONT-cappable-seq/fastq_data/pychopped/barcode$i/report.pdf \
-  	-u ONT-cappable-seq/fastq_data/pychopped/barcode$i/unclassified.fastq \
-  	-w ONT-cappable-seq/fastq_data/pychopped/barcode$i/rescued.fastq \
-  	ONT-cappable-seq/fastq_data/raw/barcode$i/barcode$i.fastq \
-  	ONT-cappable-seq/fastq_data/pychopped/barcode$i/pychopped_barcode$i.fastq 
+ 	-r $pychopped/barcode$i/report.pdf \
+  	-u $pychopped/barcode$i/unclassified.fastq \
+  	-w $pychopped/barcode$i/rescued.fastq \
+  	$input/barcode$i/barcode$i.fastq \
+  	$pychopped/barcode$i/pychopped_barcode$i.fastq 
   
 done 
 ```
