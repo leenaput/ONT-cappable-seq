@@ -29,6 +29,16 @@ ONT-cappable-seq/
  	- TSS 	 
 	- TTS
 
+
+note on samples: 
+barcode01 = enriched sample of uninfected sample
+barcode02 = control sample of uninfected sample
+barcode04 = enriched sample of 5 minutes post-infection
+barcode05 = control sample of 5 minutes post-infection
+barcode07 = enriched sample of 10 minutes post-infection
+barcode08 = control sample of 10 minutes post-infection
+barcode010 = enriched sample of 20 minutes post-infection
+barcode011 = control sample of 20 minutes post-infection
         
 ### **Raw read processing**
 
@@ -245,3 +255,5 @@ write.csv(barcode01.plus.5end.peaks.LUZ7.clustered, "ONT-cappable-seq/boundary_d
 write.csv(barcode01.minus.5end.peaks.LUZ7.clustered, "ONT-cappable-seq/boundary_data/TSS/barcode01/barcode01.5end.minus.LUZ7.peaks.oracle.narrowPeak.counts.normalized.clustered.csv", row.names = FALSE)
 
 ```
+
+At the final TSS identification step, we determined the enrichment ratio for each peak position by dividing the RPM value of the peak in the enriched samples by the RPM value of the peak position in the corresponding control sample using custom bash scripts, 
