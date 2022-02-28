@@ -175,8 +175,8 @@ do
 
 #determine peak positions
 
-	termseq_peaks ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.bedgraph --peaks ONT-cappable-seq/boundary_data/TSS/barcode$i.5end.plus.peaks --strand +
-	termseq_peaks ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.bedgraph --peaks ONT-cappable-seq/boundary_data/TSS/barcode$i.5end.minus.peaks --strand -
+	termseq_peaks ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.bedgraph ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.bedgraph --peaks ONT-cappable-seq/boundary_data/TSS/barcode$i.5end.plus.peaks --strand +
+	termseq_peaks ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.bedgraph ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.bedgraph --peaks ONT-cappable-seq/boundary_data/TSS/barcode$i.5end.minus.peaks --strand -
 	
 #add counts
 	bedtools intersect -wao \
@@ -208,7 +208,7 @@ do
 done
 ```
 
-After generating the peak tables, peaks were clustered 
+After generating the peak tables, peaks were clustered using an R script. 
 
 
 
