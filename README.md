@@ -31,14 +31,14 @@ ONT-cappable-seq/
 
 
 note on samples: 
-barcode01 = enriched sample of uninfected sample
-barcode02 = control sample of uninfected sample
-barcode04 = enriched sample of 5 minutes post-infection
-barcode05 = control sample of 5 minutes post-infection
-barcode07 = enriched sample of 10 minutes post-infection
-barcode08 = control sample of 10 minutes post-infection
-barcode010 = enriched sample of 20 minutes post-infection
-barcode011 = control sample of 20 minutes post-infection
+- barcode01 = enriched sample of uninfected sample
+- barcode02 = control sample of uninfected sample
+- barcode04 = enriched sample of 5 minutes post-infection
+- barcode05 = control sample of 5 minutes post-infection
+- barcode07 = enriched sample of 10 minutes post-infection
+- barcode08 = control sample of 10 minutes post-infection
+- barcode010 = enriched sample of 20 minutes post-infection
+- barcode011 = control sample of 20 minutes post-infection
         
 ### **Raw read processing**
 
