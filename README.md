@@ -394,6 +394,8 @@ do
 	
 	grep -w "LUZ7" $TTS/barcode$i/barcode$i.3end.minus.peaks.oracle.narrowPeak.counts > $TTS/barcode$i/barcode$i.3end.minus.LUZ7.peaks.oracle.narrowPeak.counts 
 
+done
+```
 
 ### ***Peak clustering***
 After generating the peak tables, peaks were clustered in R as described earlier (https://github.com/felixgrunberger/microbepore/blob/master/Rscripts/end5_detection.R), with cov_min = 20 and merge_w = 25. For example:
