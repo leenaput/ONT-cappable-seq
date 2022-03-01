@@ -353,9 +353,9 @@ do
 
 	echo "processing barcode$i"
 	mkdir $TTS/barcode$i
-	bedtools genomecov -ibam $clipped/barcode$i/barcode$i.clipped.sorted.bam -bga -3 -strand - > $TSS/barcode$i/barcode$i.3end.minus.bedgraph
+	bedtools genomecov -ibam $clipped/barcode$i/barcode$i.clipped.sorted.bam -bga -3 -strand - > $TTS/barcode$i/barcode$i.3end.minus.bedgraph
 
-	bedtools genomecov -ibam $clipped/barcode$i/barcode$i.clipped.sorted.bam -bga -3 -strand + > $TSS/barcode$i/barcode$i.3end.plus.bedgraph
+	bedtools genomecov -ibam $clipped/barcode$i/barcode$i.clipped.sorted.bam -bga -3 -strand + > $TTS/barcode$i/barcode$i.3end.plus.bedgraph
 
 done
 ```
