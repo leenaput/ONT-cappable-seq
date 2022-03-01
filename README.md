@@ -185,7 +185,7 @@ do
 done
 ```
 
-### **V. Identification of phage transcription start sites**
+### **V. Identification of phage transcription start sites (TSS)**
 
 #### Generation of strand-specific bed files
 For transcription start site (TSS) detection, we created strand-specific bed files from the bam files that indicate the number of reads that start at each genomic position of the phage genome. For this we used bedtools (v2.29.2).
@@ -301,7 +301,7 @@ write.csv(barcode01.minus.5end.peaks.LUZ7.clustered, "ONT-cappable-seq/boundary_
 ```
 
 #### Calculation of enrichment ratio
-At the final TSS identification step, we determined the enrichment ratio for each peak position by dividing the RPM value of the peak in the enriched samples by the RPM value of the peak position in the corresponding control sample using custom bash scripts. 
+At the final TSS identification step, we determined the enrichment ratio for each peak position by dividing the RPM value of the peak in the enriched samples by the RPM value of the peak position (+/- 1) in the corresponding control sample using custom bash scripts. 
 
 For the peaks on the + strand: 
 ```bash
@@ -331,5 +331,9 @@ The output is reported in a .csv file with 15 columns, e.g:
 15: RPM_ratio
 
 In case the RPM_ratio value of the common peak positions exceeds the enrichment ratio treshold, we annotated the postion as a phage TSS. 
+
+### **V. Identification of phage transcription termination sites (TTS)**
+
+
 
 
