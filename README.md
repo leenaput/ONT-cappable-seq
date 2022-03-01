@@ -314,7 +314,21 @@ bash scripts/enriched_TSS_peaks_minus.sh
 ```
 
 The output is reported in a .csv file with 15 columns, e.g:
-*genome version, *peak_start_enriched, *peak_end_enriched, *peak_position_enriched, *strand, *count_enriched, *RPM_enriched, *genome_version, *peak_start_control, *peak_end_control, *peak_position_control, *strand, *count_control, *RPM_control, *RPM_ratio
+1:  genome version_enriched
+2:  peak_start_enriched
+3:  peak_end_enriched
+4:  peak_position_enriched
+5:  strand_enriched
+6:  count_enriched
+7:  RPM_enriched
+8:  genome_version_control
+9:  peak_start_control
+10: peak_end_control
+11: peak_position_control
+12: strand_control
+13: count_control
+14: RPM_control
+15: RPM_ratio
 
 In case the RPM_ratio value of the common peak positions exceeds the enrichment ratio treshold, we annotated the postion as a phage TSS. 
 
