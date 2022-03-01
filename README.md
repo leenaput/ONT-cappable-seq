@@ -315,21 +315,21 @@ bash scripts/enriched_TSS_peaks_minus.sh
 ```
 
 The output is reported in a .csv file with 15 columns, e.g:
-1:  genome version_enriched
-2:  peak_start_enriched
-3:  peak_end_enriched
-4:  peak_position_enriched
-5:  strand_enriched
-6:  count_enriched
-7:  RPM_enriched
-8:  genome_version_control
-9:  peak_start_control
-10: peak_end_control
-11: peak_position_control
-12: strand_control
-13: count_control
-14: RPM_control
-15: RPM_ratio
+-	1:  genome version_enriched
+-	2:  peak_start_enriched
+-	3:  peak_end_enriched
+-	4:  peak_position_enriched
+-	5:  strand_enriched
+-	6:  count_enriched
+-	7:  RPM_enriched
+-	8:  genome_version_control
+-	9:  peak_start_control
+-	10: peak_end_control
+-	11: peak_position_control
+-	12: strand_control
+-	13: count_control
+-	14: RPM_control
+-	15: RPM_ratio
 
 In case the RPM_ratio value of the common peak positions exceeds the enrichment ratio treshold, we annotated the postion as a phage TSS. 
 
@@ -445,7 +445,7 @@ write.csv(barcode01.minus.3end.peaks.LUZ7.clustered, "ONT-cappable-seq/boundary_
 
 ```
 
-#### ***Calculation of terminator strength***
+#### ***Calculation of terminator efficiency***
 
 First, we extract all the unique 3end viral peak positions that are identified from the enriched samples. For each individual peak position, the reads that start upstream are extracted and used to calculate the coverage drop before and after the terminator sites, averaged over a window of 20 bp, for each sample timepoint. The script for this analysis, terminator_efficiency.sh, is provided in this repository. 
 
@@ -455,15 +455,16 @@ bash terminator_efficiency.sh
 
 ```
 
-For each timepoint, this script generates an output file with 8 columns that contains the termination efficiencies across the identified 3end peak positions. 
-1: genomic position of 3end peak
-2: start position of upstream genomic interval to calculate the average coverage across 20bp interval
-3: average coverage across 20 bp upstream interval
-4: genomic position of 3end peak
-5: end position of downstream genomic interval to calculate the average coverage across 20bp interval
-6: average coverage across 20 bp downstream interval
-7: ratio of upstream coverage / downstream coverage 
-8: TE(%)
+For each timepoint, this script generates an output file with 8 columns that contains the termination efficiencies (TE) across the identified 3end peak positions. 
+-	1: genomic position of 3end peak
+-	2: start position of upstream genomic interval to calculate the average coverage across 20bp interval	
+-	3: average coverage across 20 bp upstream interval
+-	4: genomic position of 3end peak
+-	5: end position of downstream genomic interval to calculate the average coverage across 20bp interval
+-	6: average coverage across 20 bp downstream interval
+-	7: ratio of upstream coverage / downstream coverage 
+-	8: TE(%)
+
 
 The 3end peak positions with an average upstream coverage of at least 30 and that show a termination efficiency >20% were annotated as TTS candidates. 
 
