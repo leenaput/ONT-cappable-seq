@@ -455,4 +455,17 @@ bash terminator_efficiency.sh
 
 ```
 
+For each timepoint, this script generates an output file with 8 columns that contains the termination efficiencies across the identified 3end peak positions. 
+1: genomic position of 3end peak
+2: start position of upstream genomic interval to calculate the average coverage across 20bp interval
+3: average coverage across 20 bp upstream interval
+4: genomic position of 3end peak
+5: end position of downstream genomic interval to calculate the average coverage across 20bp interval
+6: average coverage across 20 bp downstream interval
+7: ratio of upstream coverage / downstream coverage 
+8: TE(%)
+
+The 3end peak positions with an average upstream coverage of at least 30 and that show a termination efficiency >20% were annotated as TTS candidates. 
+
+
 
