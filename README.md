@@ -49,7 +49,7 @@ First, multiple fastq files were merged to a single fastq file per sample. The r
 
 WD=$(pwd)
 input=$WD/fastq_data/raw
-pychopped=$WD/pychopped
+pychopped=$WD/fastq_data/pychopped
 
 for i in $(seq -f %02g 1 12)
 do
@@ -72,6 +72,11 @@ Next, the full-length pychopped reads were trimmed with Cutadapt (v2.7) to remov
 ```bash
 #!/bin/bash
 
+WD=$(pwd)
+pychopped=$WD/fastq_data/pychopped
+cutAAA=$WD/fastq_data/cut_AAA
+cutSSP=$WD/fastq_data/cut_SSP
+
 for i in $(seq -f %02g 1 12)
 do
 
@@ -79,14 +84,14 @@ do
 	
 	#remove polyA tail from 3' end
 	cutadapt -a "A{10}" -j 0 \
-	-o ONT-cappable-seq/fastq_data/cut_AAA/barcode$i/barcode$i.cutadapt.fastq \
-	ONT-cappable-seq/fastq_data/pychopped/barcode$i/pychopped_barcode$i.fastq 
+	-o $cutAAA/barcode$i/barcode$i.cutadapt.fastq \
+	$pychopped/barcode$i/pychopped_barcode$i.fastq 
 
 
   	#remove SSP primer from 5' end
 	cutadapt -g "TTTCTGTTGGTGCTGATATTGCTGGG" -j 0 \
-	-o ONT-cappable-seq/fastq_data/cut_SSP/barcode$i/barcode$i.cutadapt_SSP.fastq \
-	ONT-cappable-seq/fastq_data/cut_AAA/barcode$i/barcode$i.cutadapt.fastq 
+	-o $cutSSP/barcode$i/barcode$i.cutadapt_SSP.fastq \
+	$cutAAA/barcode$i/barcode$i.cutadapt.fastq 
 
 done
 ```
@@ -97,18 +102,24 @@ Minimap2 (v2.17) was used to map the trimmed reads to the reference genomes and 
 ```bash
 #!/bin/bash
 
+WD=$(pwd)
+cutSSP=$WD/fastq_data/cut_SSP
+genome=$WD/genome_data
+mapped=$WD/mapping_data/mapped
+clipped=$WD/mapping_data/clipped
+
 for i in $(seq -f %02g 1 12)
 do
 
 	echo "processing barcode$i";
 	
 	# make output directory to store mapping data
-	mkdir ONT-cappable-seq/mapped_data/mapped/barcode$i 
+	mkdir $mapped/barcode$i 
 	
 	# map reads to reference sequences using minimap2
 	minimap2 -ax map-ont -k14 --MD \
-	ONT-cappable-seq/genome_data/references.fasta \
-	ONT-cappable-seq/fastq_data/cutadaptSSP/barcode$i/barcode$i.cutadapt_SSP.fastq > ONT-cappable-seq/mapped_data/mapped/barcode$i/barcode$i.sam 
+	$genome/references.fasta \
+	$cutSSP/barcode$i/barcode$i.cutadapt_SSP.fastq > $mapped/barcode$i/barcode$i.sam 
 	
 done
 ```
@@ -118,17 +129,26 @@ Next, samclip (v0.4.0) was used to exclude reads from the alignment that have mo
 ```bash
 #!/bin/bash
 
+WD=$(pwd)
+genome=$WD/genome_data
+mapped=$WD/mapping_data/mapped
+clipped=$WD/mapping_data/clipped
+
 for i in $(seq -f %02g 1 12)
 do
 
-	samclip --max 10 --ref ONT-cappable-seq/genome_data/references.fasta < ONT-cappable-seq/mapped_data/mapped/barcode$i/barcode$i.sam > ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sam
+	# make output directory to store mapping data
+	mkdir $clipped/barcode$i 
+	
+	#clipping
+	samclip --max 10 --ref $genome/references.fasta < $mapped/barcode$i/barcode$i.sam > $clipped/barcode$i/barcode$i.clipped.sam
 	
 	# convert alignment format and assess read mapping metrics using samtools (v1.9)
-  	samtools view -bS ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sam -o ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.bam
-        samtools sort -o ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sorted.bam ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.bam
-	samtools index ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sorted.bam
-	samtools flagstat ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sorted.bam > ONT-cappable-seq/mapped_data/clipped/barcode$i/flagstat.txt
-	samtools idxstats ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sorted.bam > ONT-cappable-seq/mapped_data/clipped/barcode$i/idxstats.txt
+  	samtools view -bS $clipped/barcode$i/barcode$i.clipped.sam -o $clipped/barcode$i/barcode$i.clipped.bam
+        samtools sort -o $clipped/barcode$i/barcode$i.clipped.sorted.bam $clipped/barcode$i/barcode$i.clipped.bam
+	samtools index O $clipped/barcode$i/barcode$i.clipped.sorted.bam
+	samtools flagstat $clipped/barcode$i/barcode$i.clipped.sorted.bam > $clipped/barcode$i/flagstat.txt
+	samtools idxstats $clipped/barcode$i/barcode$i.clipped.sorted.bam > $clipped/barcode$i/idxstats.txt
 
 done
 ```
@@ -140,17 +160,25 @@ Next, featureCounts (v2.0.1) was used to assign the reads to the genomic feature
 ```bash
 #!/bin/bash
 
+WD=$(pwd)
+genome=$WD/genome_data
+clipped=$WD/mapping_data/clipped
+counts=$WD/featurecount_data
+
 for i in $(seq -f %02g 1 12)
 do
-	mkdir ONT-cappable-seq/featurecount_data/barcode$i
-	featureCounts -L -O -a ONT-cappable-seq/genome_data/US449.gtf \
-	ONT-cappable-seq/mapping_data/clipped/barcode$i/barcode$i.clipped.sorted.bam \
-	-o ONT-cappable-seq/featurecount_data/barcode$i/US449 \
+	mkdir $counts/barcode$i
+	
+	# assign reads to host features
+	featureCounts -L -O -a $genome/US449.gtf \
+	$clipped/barcode$i/barcode$i.clipped.sorted.bam \
+	-o $counts/barcode$i/US449 \
 	-t transcript
 	
-	featureCounts -L -O -a ONT-cappable-seq/genome_data/LUZ7.gtf \
-	ONT-cappable-seq/mapping_data/clipped/barcode$i/barcode$i.clipped.sorted.bam \
-	-o ONT-cappable-seq/featurecount_data/barcode$i/LUZ7 \
+	# assign reads to phage features
+	featureCounts -L -O -a $genome/LUZ7.gtf \
+	$clipped/barcode$i/barcode$i.clipped.sorted.bam \
+	-o $counts/barcode$i/LUZ7 \
 	-t transcript
 	
 done
@@ -165,19 +193,24 @@ For transcription start site (TSS) detection, we created strand-specific bed fil
 ```bash
 #!/bin/bash
 
+WD=$(pwd)
+clipped=$WD/mapping_data/clipped
+TSS=$WD/boundary_data/TSS
+
 # get 5end position for all reads in sorted bam file
 
 for i in $(seq -f %02g 1 12)
 do
 
 	echo "processing barcode$i"
-	mkdir ONT-cappable-seq/boundary_data/TSS/barcode$i
-	bedtools genomecov -ibam ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sorted.bam -bga -5 -strand - > ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.bedgraph
+	mkdir $TSS/barcode$i
+	bedtools genomecov -ibam $clipped/barcode$i/barcode$i.clipped.sorted.bam -bga -5 -strand - > $TSS/barcode$i/barcode$i.5end.minus.bedgraph
 
-	bedtools genomecov -ibam ONT-cappable-seq/mapped_data/clipped/barcode$i/barcode$i.clipped.sorted.bam -bga -5 -strand + > ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.bedgraph
+	bedtools genomecov -ibam $clipped/barcode$i/barcode$i.clipped.sorted.bam -bga -5 -strand + > $TSS/barcode$i/barcode$i.5end.plus.bedgraph
 
 done
 ```
+
 #### Peak calling
 These strand-specific input files were then used to find local maxima for 5' read ends using the termseq-peaks.py script, a previously published peak-calling tool (https://github.com/nichd-bspc/termseq-peaks). This tool generates output files in the narrowPeaks format. After filtering for phage data only, peak coverage information was  added using bedtools intersect. 
 
@@ -185,39 +218,43 @@ These strand-specific input files were then used to find local maxima for 5' rea
 ```bash
 #!/bin/bash
 
+WD=$(pwd)
+clipped=$WD/mapping_data/clipped
+TSS=$WD/boundary_data/TSS
+
 for i in $(seq -f %02g 1 12)
 do
 
 #determine peak positions
 
-	termseq_peaks ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.bedgraph ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.bedgraph --peaks ONT-cappable-seq/boundary_data/TSS/barcode$i.5end.plus.peaks --strand +
-	termseq_peaks ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.bedgraph ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.bedgraph --peaks ONT-cappable-seq/boundary_data/TSS/barcode$i.5end.minus.peaks --strand -
+	termseq_peaks $TSS/barcode$i/barcode$i.5end.plus.bedgraph $TSS/barcode$i/barcode$i.5end.plus.bedgraph --peaks $TSS/barcode$i.5end.plus.peaks --strand +
+	termseq_peaks $TSS/barcode$i/barcode$i.5end.minus.bedgraph $TSS/barcode$i/barcode$i.5end.minus.bedgraph --peaks $TSS/barcode$i.5end.minus.peaks --strand -
 	
 #add counts
 	bedtools intersect -wao \
-	-a ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.peaks.oracle.narrowPeak \
-	-b ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.bedgraph \
-	>  ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.peaks.oracle.narrowPeak.counts
+	-a $TSS/barcode$i/barcode$i.5end.plus.peaks.oracle.narrowPeak \
+	-b $TSS/barcode$i/barcode$i.5end.plus.bedgraph \
+	> $TSS/barcode$i/barcode$i.5end.plus.peaks.oracle.narrowPeak.counts
 
 	bedtools intersect -wao \
-	-a ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.peaks.oracle.narrowPeak \
-	-b ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.bedgraph \
-	>  ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.peaks.oracle.narrowPeak.counts
+	-a $TSS/barcode$i/barcode$i.5end.minus.peaks.oracle.narrowPeak \
+	-b $TSS/barcode$i/barcode$i.5end.minus.bedgraph \
+	>  $TSS/barcode$i/barcode$i.5end.minus.peaks.oracle.narrowPeak.counts
 	
 #because we are mainly focusing on the identification of viral TSS, we extracted the data of LUZ7 and stored it in a seperate file for subsequent analysis 
-	grep -w "LUZ7" ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.peaks.oracle.narrowPeak.counts > ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.LUZ7.peaks.oracle.narrowPeak.counts 
+	grep -w "LUZ7" $TSS/barcode$i/barcode$i.5end.plus.peaks.oracle.narrowPeak.counts > $TSS/barcode$i/barcode$i.5end.plus.LUZ7.peaks.oracle.narrowPeak.counts 
 	
-	grep -w "LUZ7" ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.peaks.oracle.narrowPeak.counts > ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.LUZ7.peaks.oracle.narrowPeak.counts 
+	grep -w "LUZ7" $TSS/barcode$i/barcode$i.5end.minus.peaks.oracle.narrowPeak.counts > $TSS/barcode$i/barcode$i.5end.minus.LUZ7.peaks.oracle.narrowPeak.counts 
 	
 
 #add RPM values 
-	total_mapped=$(samtools view -c -F4 ONT-cappable-seq/mapped_data/clipped/barcode$i.clipped.sorted.bam)
+	total_mapped=$(samtools view -c -F4 $clipped/barcode$i.clipped.sorted.bam)
 
-	awk '{print $1, $2, $3, $4, $5, $6, $7, $8 ,$9, $10, $11, $12, $13, $14, $15, '$total_mapped', 1000000*$14/'$total_mapped'}' ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.LUZ7.peaks.oracle.narrowPeak.counts 
-	> ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.plus.LUZ7.peaks.oracle.narrowPeak.counts.normalized
+	awk '{print $1, $2, $3, $4, $5, $6, $7, $8 ,$9, $10, $11, $12, $13, $14, $15, '$total_mapped', 1000000*$14/'$total_mapped'}' $TSS/barcode$i/barcode$i.5end.plus.LUZ7.peaks.oracle.narrowPeak.counts 
+	> $TSS/barcode$i/barcode$i.5end.plus.LUZ7.peaks.oracle.narrowPeak.counts.normalized
 
-	awk '{print $1, $2, $3, $4, $5, $6, $7, $8 ,$9, $10, $11, $12, $13, $14, $15, '$total_mapped', 1000000*$14/'$total_mapped'}' ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.LUZ7.peaks.oracle.narrowPeak.counts 
-	> ONT-cappable-seq/boundary_data/TSS/barcode$i/barcode$i.5end.minus.LUZ7.peaks.oracle.narrowPeak.counts.normalized
+	awk '{print $1, $2, $3, $4, $5, $6, $7, $8 ,$9, $10, $11, $12, $13, $14, $15, '$total_mapped', 1000000*$14/'$total_mapped'}'  $TSS/barcode$i/barcode$i.5end.minus.LUZ7.peaks.oracle.narrowPeak.counts 
+	> $TSS/barcode$i/barcode$i.5end.minus.LUZ7.peaks.oracle.narrowPeak.counts.normalized
 
 
 done
@@ -262,6 +299,6 @@ write.csv(barcode01.minus.5end.peaks.LUZ7.clustered, "ONT-cappable-seq/boundary_
 
 ```
 
-#### calculation of enrichment ratio
+#### Calculation of enrichment ratio
 At the final TSS identification step, we determined the enrichment ratio for each peak position by dividing the RPM value of the peak in the enriched samples by the RPM value of the peak position in the corresponding control sample using custom bash scripts.
 
