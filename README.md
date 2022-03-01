@@ -302,3 +302,8 @@ write.csv(barcode01.minus.5end.peaks.LUZ7.clustered, "ONT-cappable-seq/boundary_
 #### Calculation of enrichment ratio
 At the final TSS identification step, we determined the enrichment ratio for each peak position by dividing the RPM value of the peak in the enriched samples by the RPM value of the peak position in the corresponding control sample using custom bash scripts.
 
+For the peaks on the + strand: enriched_TSS_peaks_plus.sh
+
+For the peaks on the - strand: enriched_TSS_peaks_minus.sh
+
+
