@@ -158,6 +158,7 @@ done
 
 ### **Identification of phage transcription start sites**
 
+#### Generation of strand-specific bed files
 For transcription start site (TSS) detection, we created strand-specific bed files from the bam files that indicate the number of reads that start at each genomic position of the phage genome. For this we used bedtools (v2.29.2).
 
 
@@ -177,7 +178,7 @@ do
 
 done
 ```
-
+#### Peak calling
 These strand-specific input files were then used to find local maxima for 5' read ends using the termseq-peaks.py script, a previously published peak-calling tool (https://github.com/nichd-bspc/termseq-peaks). This tool generates output files in the narrowPeaks format. After filtering for phage data only, peak coverage information was  added using bedtools intersect. 
 
 
@@ -222,6 +223,7 @@ do
 done
 ```
 
+#### Peak clustering
 After generating the peak tables, peaks were clustered in R as described earlier (https://github.com/felixgrunberger/microbepore/blob/master/Rscripts/end5_detection.R), with cov_min = 5 and merge_w = 20. For example:
 
 ```R
@@ -260,4 +262,6 @@ write.csv(barcode01.minus.5end.peaks.LUZ7.clustered, "ONT-cappable-seq/boundary_
 
 ```
 
-At the final TSS identification step, we determined the enrichment ratio for each peak position by dividing the RPM value of the peak in the enriched samples by the RPM value of the peak position in the corresponding control sample using custom bash scripts, 
+#### calculation of enrichment ratio
+At the final TSS identification step, we determined the enrichment ratio for each peak position by dividing the RPM value of the peak in the enriched samples by the RPM value of the peak position in the corresponding control sample using custom bash scripts.
+
