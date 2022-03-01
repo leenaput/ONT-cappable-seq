@@ -10,7 +10,7 @@ Total RNA was enriched for primary transcripts using an adapted version of the (
 
 Note: many of the steps outlined in this workflow are based on the microbepore pipeline that was used for the analysis of prokaryotic Nanopore RNA-seq data (https://felixgrunberger.github.io/microbepore/), with some modifications tailored to our ONT-cappable-seq approach. 
 
-### **Data navigation**
+### **I. Data navigation**
 
 Data files were organized in the following way:
 
@@ -40,7 +40,7 @@ note on samples:
 - barcode010 = enriched sample of 20 minutes post-infection
 - barcode011 = control sample of 20 minutes post-infection
         
-### **Raw read processing**
+### **II. Raw read processing**
 
 First, multiple fastq files were merged to a single fastq file per sample. The raw reads were processed by Pychopper (v2.5.0) to identify and correctly orient full-length cDNA reads that contain both SSP and VNP primers.
 
@@ -95,7 +95,7 @@ do
 
 done
 ```
-### **Read mapping to reference genomes**
+### **III. Read mapping to reference genomes**
 
 Minimap2 (v2.17) was used to map the trimmed reads to the reference genomes and the RNA spike-in sequence. In our study, we used the reference genome of _Pseudomonas aeruginosa_ phage LUZ7 (NC_013691.1) and bacterial host _P. aeruginosa_ strain US449 (CP091880). The sequences were concatenated into a single fasta file, references.fasta, which is provided on this page.   
 
@@ -153,7 +153,7 @@ do
 done
 ```
 
-### **Read counting to genomic features**
+### **IV. Read counting to genomic features**
 
 Next, featureCounts (v2.0.1) was used to assign the reads to the genomic features of the phage and the host. The gtf annotation files used are provided in this repository. 
 
@@ -184,7 +184,7 @@ do
 done
 ```
 
-### **Identification of phage transcription start sites**
+### **V. Identification of phage transcription start sites**
 
 #### Generation of strand-specific bed files
 For transcription start site (TSS) detection, we created strand-specific bed files from the bam files that indicate the number of reads that start at each genomic position of the phage genome. For this we used bedtools (v2.29.2).
