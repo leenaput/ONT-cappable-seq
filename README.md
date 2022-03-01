@@ -394,6 +394,15 @@ do
 	
 	grep -w "LUZ7" $TTS/barcode$i/barcode$i.3end.minus.peaks.oracle.narrowPeak.counts > $TTS/barcode$i/barcode$i.3end.minus.LUZ7.peaks.oracle.narrowPeak.counts 
 
+#add RPM values 
+	total_mapped=$(samtools view -c -F4 $clipped/barcode$i.clipped.sorted.bam)
+
+	awk '{print $1, $2, $3, $4, $5, $6, $7, $8 ,$9, $10, $11, $12, $13, $14, $15, '$total_mapped', 1000000*$14/'$total_mapped'}' $TTS/barcode$i/barcode$i.3end.plus.LUZ7.peaks.oracle.narrowPeak.counts 
+	> $TTS/barcode$i/barcode$i.3end.plus.LUZ7.peaks.oracle.narrowPeak.counts.normalized
+
+	awk '{print $1, $2, $3, $4, $5, $6, $7, $8 ,$9, $10, $11, $12, $13, $14, $15, '$total_mapped', 1000000*$14/'$total_mapped'}'  $TTS/barcode$i/barcode$i.5end.minus.LUZ7.peaks.oracle.narrowPeak.counts 
+	> $TTS/barcode$i/barcode$i.3end.minus.LUZ7.peaks.oracle.narrowPeak.counts.normalized
+
 done
 ```
 
@@ -418,7 +427,7 @@ barcode01.minus.3end.peaks.LUZ7.counts <- read.table("ONT-cappable-seq/boundary_
 
 	## cluster peaks within 25bp and remove peaks with less than 20 reads
 
-	barcode01.plus.3end.peaks.LUZ7.counts.clustered <-barcode01.plus.3end.peaks.LUZ7.counts %>% dplyr::rename(chr = V1, start_peak = V2, end_peak = V3, prominence = V5, strand_peak = V6, width = V10, start_cov = V12, end_cov = V13, cov = V14, width_cov = V15) %>% dplyr::select(-V4, -V7, -V8, -V9,-V11) %>% group_by(start_peak, end_peak) %>% filter(cov == max(cov)) %>% dplyr::mutate(decision_v = ifelse(strand == "+", min(end_cov), max(end_cov))) %>% filter(end_cov == decision_v) %>% ungroup() %>% arrange(end_cov) %>%  dplyr::mutate(index = lag(end_cov, default = 1) + as.integer(25), index1 = cumsum(ifelse(index >= start_cov, 0, 1))+1) %>% group_by(index1) %>% filter(cov == max(cov), cov >= 20) 
+	barcode01.plus.3end.peaks.LUZ7.counts.clustered <-barcode01.plus.3end.peaks.LUZ7.counts %>% dplyr::rename(chr = V1, start_peak = V2, end_peak = V3, prominence = V5, strand_peak = V6, width = V10, start_cov = V12, end_cov = V13, cov = V14, width_cov = V15, mapped_reads = V16, RPM = V17) %>% dplyr::select(-V4, -V7, -V8, -V9,-V11) %>% group_by(start_peak, end_peak) %>% filter(cov == max(cov)) %>% dplyr::mutate(decision_v = ifelse(strand == "+", min(end_cov), max(end_cov))) %>% filter(end_cov == decision_v) %>% ungroup() %>% arrange(end_cov) %>%  dplyr::mutate(index = lag(end_cov, default = 1) + as.integer(25), index1 = cumsum(ifelse(index >= start_cov, 0, 1))+1) %>% group_by(index1) %>% filter(cov == max(cov), cov >= 20) 
 
 # analysis of - peaks
 
@@ -427,7 +436,7 @@ barcode01.minus.3end.peaks.LUZ7.counts <- read.table("ONT-cappable-seq/boundary_
 	
 	## cluster peaks within 5bp and remove peaks with less than 5 reads
 
-	barcode01.minus.3end.peaks.LUZ7.counts.clustered <-barcode01.minus.3end.peaks.LUZ7.counts %>% dplyr::rename(chr = V1, start_peak = V2, end_peak = V3, 	prominence = V5, strand_peak = V6, width = V10, start_cov = V12, end_cov = V13, cov = V14, width_cov = V15) %>% dplyr::select(-V4, -V7, -V8, -V9,-V11) %>% group_by(start_peak, end_peak) %>% filter(cov == max(cov)) %>% dplyr::mutate(decision_v = ifelse(strand == "+", min(end_cov), max(end_cov))) %>% filter(end_cov == decision_v) %>% ungroup() %>% arrange(end_cov) %>%  dplyr::mutate(index = lag(end_cov, default = 1) + as.integer(25), index1 = cumsum(ifelse(index >= start_cov, 0, 1))+1) %>% group_by(index1) %>% filter(cov == max(cov), cov >= 20) 
+	barcode01.minus.3end.peaks.LUZ7.counts.clustered <-barcode01.minus.3end.peaks.LUZ7.counts %>% dplyr::rename(chr = V1, start_peak = V2, end_peak = V3, 	prominence = V5, strand_peak = V6, width = V10, start_cov = V12, end_cov = V13, cov = V14, width_cov = V15, mapped_reads = V16, RPM = V17) %>% dplyr::select(-V4, -V7, -V8, -V9,-V11) %>% group_by(start_peak, end_peak) %>% filter(cov == max(cov)) %>% dplyr::mutate(decision_v = ifelse(strand == "+", min(end_cov), max(end_cov))) %>% filter(end_cov == decision_v) %>% ungroup() %>% arrange(end_cov) %>%  dplyr::mutate(index = lag(end_cov, default = 1) + as.integer(25), index1 = cumsum(ifelse(index >= start_cov, 0, 1))+1) %>% group_by(index1) %>% filter(cov == max(cov), cov >= 20) 
 
 # write to .csv file
 write.csv(barcode01.plus.3end.peaks.LUZ7.clustered, "ONT-cappable-seq/boundary_data/TTS/barcode01/barcode01.3end.plus.LUZ7.peaks.oracle.narrowPeak.counts.normalized.clustered.csv", row.names = FALSE)
