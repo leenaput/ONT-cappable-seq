@@ -397,7 +397,7 @@ do
 done
 ```
 
-### ***Peak clustering***
+#### ***Peak clustering***
 After generating the peak tables, peaks were clustered in R as described earlier (https://github.com/felixgrunberger/microbepore/blob/master/Rscripts/end5_detection.R), with cov_min = 20 and merge_w = 25. For example:
 
 ```R
@@ -436,5 +436,6 @@ write.csv(barcode01.minus.3end.peaks.LUZ7.clustered, "ONT-cappable-seq/boundary_
 
 ```
 
+#### ***Calculation of terminator strength***
 
 
