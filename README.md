@@ -187,7 +187,7 @@ done
 
 ### **V. Identification of phage transcription start sites (TSS)**
 
-#### Generation of strand-specific bed files
+#### ***Generation of strand-specific bed files***
 For transcription start site (TSS) detection, we created strand-specific bed files from the bam files that indicate the number of reads that start at each genomic position of the phage genome. For this we used bedtools (v2.29.2).
 
 
@@ -212,7 +212,7 @@ do
 done
 ```
 
-#### Peak calling
+#### ***Peak calling***
 These strand-specific input files were then used to find local maxima for 5' read ends using the termseq-peaks.py script, a previously published peak-calling tool (https://github.com/nichd-bspc/termseq-peaks). This tool generates output files in the narrowPeaks format. After filtering for phage data only, peak coverage information was  added using bedtools intersect. 
 
 
@@ -261,7 +261,7 @@ do
 done
 ```
 
-#### Peak clustering
+#### ***Peak clustering***
 After generating the peak tables, peaks were clustered in R as described earlier (https://github.com/felixgrunberger/microbepore/blob/master/Rscripts/end5_detection.R), with cov_min = 5 and merge_w = 20. For example:
 
 ```R
@@ -300,7 +300,8 @@ write.csv(barcode01.minus.5end.peaks.LUZ7.clustered, "ONT-cappable-seq/boundary_
 
 ```
 
-#### Calculation of enrichment ratio
+#### ***Calculation of enrichment ratio***
+
 At the final TSS identification step, we determined the enrichment ratio for each peak position by dividing the RPM value of the peak in the enriched samples by the RPM value of the peak position (+/- 1) in the corresponding control sample using custom bash scripts. 
 
 For the peaks on the + strand: 
@@ -334,6 +335,32 @@ In case the RPM_ratio value of the common peak positions exceeds the enrichment 
 
 ### **VI. Identification of phage transcription termination sites (TTS)**
 
+#### ***Generation of strand-specific bed files***
+Similar to TSS detection, strand-specific bed files were generated for TTS detection from the bam files using bedtools genomecov, but this time they report the number of 3' ends at each genomic position of the phage. 
+
+
+```bash
+#!/bin/bash
+
+WD=$(pwd)
+clipped=$WD/mapping_data/clipped
+TTS=$WD/boundary_data/TTS
+
+# get 3end position for all reads in sorted bam file
+
+for i in $(seq -f %02g 1 12)
+do
+
+	echo "processing barcode$i"
+	mkdir $TTS/barcode$i
+	bedtools genomecov -ibam $clipped/barcode$i/barcode$i.clipped.sorted.bam -bga -3 -strand - > $TSS/barcode$i/barcode$i.3end.minus.bedgraph
+
+	bedtools genomecov -ibam $clipped/barcode$i/barcode$i.clipped.sorted.bam -bga -3 -strand + > $TSS/barcode$i/barcode$i.3end.plus.bedgraph
+
+done
+```
+
+#### ***Peak calling***
 
 
 
