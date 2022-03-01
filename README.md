@@ -332,7 +332,8 @@ The output is reported in a .csv file with 15 columns, e.g:
 
 In case the RPM_ratio value of the common peak positions exceeds the enrichment ratio treshold, we annotated the postion as a phage TSS. 
 
-### **V. Identification of phage transcription termination sites (TTS)**
+### **VI. Identification of phage transcription termination sites (TTS)**
+
 
 
 
