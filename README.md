@@ -447,4 +447,6 @@ write.csv(barcode01.minus.3end.peaks.LUZ7.clustered, "ONT-cappable-seq/boundary_
 
 #### ***Calculation of terminator strength***
 
+First, we extract all the unique 3end viral peak positions that are identified from the enriched samples. For each individual peak position, the reads that start upstream are extracted and used to calculate the coverage drop before and after the terminator sites, averaged over a window of 20 bp, for each sample timepoint.
+
 
