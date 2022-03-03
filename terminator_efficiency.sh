@@ -40,14 +40,14 @@ do
 
 	awk -v TTS="$a" '$2 >= TTS-20 && $2 <= TTS+20' $TTS/barcode04/TE/$a.TTS.plus.coverage > $TTS/barcode04/TE/$a.TTS.plus.terminator.region.coverage
 	awk -v TTS="$a" '$2 > TTS' $TTS/barcode04/TE/$a.TTS.plus.terminator.region.coverage | awk -v TTS="$a" '{total += $3} END {print TTS, TTS+20, total/NR}' > $TTS/barcode04/TE/$a.TTS.downstream.average.plus.coverage
-	awk -v TTS="$a" '$2 < TTS' $TTS/barcode04/TE/$a.TTS.plus.terminator.region.coverage | awk -v TTS="$a" '{total += $3} END {print TTS, TTS-20, total/NR}' > $TTS/barcode04/TE/$a.upstream.average.plus.coverage
+	awk -v TTS="$a" '$2 < TTS' $TTS/barcode04/TE/$a.TTS.plus.terminator.region.coverage | awk -v TTS="$a" '{total += $3} END {print TTS, TTS-20, total/NR}' > $TTS/barcode04/TE/$a.TTS.upstream.average.plus.coverage
 	paste -d " " $TTS/barcode04/TE/$a.TTS.upstream.average.plus.coverage $TTS/barcode04/TE/$a.TTS.downstream.average.plus.coverage | awk '{print $1, $2, $3, $4, $5, $6, $6/$3, 1-$6/$3}' > $TTS/barcode04/TE/$a.plus.coverage.drop
 
 
 	echo "processing t10"
   	awk -v TTS="$a" '$2 >= TTS-20 && $2 <= TTS+20' $TTS/barcode07/TE/$a.TTS.plus.coverage > $TTS/barcode07/TE/$a.TTS.plus.terminator.region.coverage
         awk -v TTS="$a" '$2 > TTS' $TTS/barcode07/TE/$a.TTS.plus.terminator.region.coverage | awk -v TTS="$a" '{total += $3} END {print TTS, TTS+20, total/NR}' > $TTS/barcode07/TE/$a.TTS.downstream.average.plus.coverage
-        awk -v TTS="$a" '$2 < TTS' $TTS/barcode07/TE/$a.TTS.plus.terminator.region.coverage | awk -v TTS="$a" '{total += $3} END {print TTS, TTS-20, total/NR}' > $TTS/barcode07/TE/$a.upstream.average.plus.coverage
+        awk -v TTS="$a" '$2 < TTS' $TTS/barcode07/TE/$a.TTS.plus.terminator.region.coverage | awk -v TTS="$a" '{total += $3} END {print TTS, TTS-20, total/NR}' > $TTS/barcode07/TE/$a.TTS.upstream.average.plus.coverage
         paste -d " " $TTS/barcode07/TE/$a.TTS.upstream.average.plus.coverage $TTS/barcode07/TE/$a.TTS.downstream.average.plus.coverage | awk '{print $1, $2, $3, $4, $5, $6, $6/$3, 1-$6/$3}' > $TTS/barcode07/TE/$a.plus.coverage.drop	
 
 
