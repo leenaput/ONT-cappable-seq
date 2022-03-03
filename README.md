@@ -82,6 +82,8 @@ for i in $(seq -f %02g 1 12)
 do
 
 	echo "processing barcode$i";
+	mkdir $cutAAA/barcode$i
+	mkdir $cutSSP/barcode$i
 	
 	#remove polyA tail from 3' end
 	cutadapt -a "A{10}" -j 0 \
