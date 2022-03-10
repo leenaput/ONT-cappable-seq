@@ -232,8 +232,8 @@ do
 
 #determine peak positions
 
-	termseq_peaks $TSS/barcode$i/barcode$i.5end.plus.bedgraph $TSS/barcode$i/barcode$i.5end.plus.bedgraph --peaks $TSS/barcode$i.5end.plus.peaks --strand +
-	termseq_peaks $TSS/barcode$i/barcode$i.5end.minus.bedgraph $TSS/barcode$i/barcode$i.5end.minus.bedgraph --peaks $TSS/barcode$i.5end.minus.peaks --strand -
+	termseq_peaks $TSS/barcode$i/barcode$i.5end.plus.bedgraph $TSS/barcode$i/barcode$i.5end.plus.bedgraph --peaks $TSS/barcode$i/barcode$i.5end.plus.peaks --strand +
+	termseq_peaks $TSS/barcode$i/barcode$i.5end.minus.bedgraph $TSS/barcode$i/barcode$i.5end.minus.bedgraph --peaks $TSS/barcode$i/barcode$i.5end.minus.peaks --strand -
 	
 #add counts
 	bedtools intersect -wao \
