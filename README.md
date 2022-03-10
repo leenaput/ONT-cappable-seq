@@ -253,7 +253,7 @@ do
 	
 
 #add RPM values 
-	total_mapped=$(samtools view -c -F4 $clipped/barcode$i.clipped.sorted.bam)
+	total_mapped=$(samtools view -c -F4 $clipped/barcode$i/barcode$i.clipped.sorted.bam)
 
 	awk '{print $1, $2, $3, $4, $5, $6, $7, $8 ,$9, $10, $11, $12, $13, $14, $15, '$total_mapped', 1000000*$14/'$total_mapped'}' $TSS/barcode$i/barcode$i.5end.plus.LUZ7.peaks.oracle.narrowPeak.counts 
 	> $TSS/barcode$i/barcode$i.5end.plus.LUZ7.peaks.oracle.narrowPeak.counts.normalized
@@ -379,8 +379,8 @@ do
 
 #determine peak positions
 
-	termseq_peaks $TTS/barcode$i/barcode$i.3end.plus.bedgraph $TTS/barcode$i/barcode$i.3end.plus.bedgraph --peaks $TTS/barcode$i.3end.plus.peaks --strand +
-	termseq_peaks $TTS/barcode$i/barcode$i.3end.minus.bedgraph $TTS/barcode$i/barcode$i.3end.minus.bedgraph --peaks $TTS/barcode$i.3end.minus.peaks --strand -
+	termseq_peaks $TTS/barcode$i/barcode$i.3end.plus.bedgraph $TTS/barcode$i/barcode$i.3end.plus.bedgraph --peaks $TTS/barcode$i/barcode$i.3end.plus.peaks --strand +
+	termseq_peaks $TTS/barcode$i/barcode$i.3end.minus.bedgraph $TTS/barcode$i/barcode$i.3end.minus.bedgraph --peaks $TTS/barcode$i/barcode$i.3end.minus.peaks --strand -
 	
 #add counts
 	bedtools intersect -wao \
@@ -399,7 +399,7 @@ do
 	grep -w "LUZ7" $TTS/barcode$i/barcode$i.3end.minus.peaks.oracle.narrowPeak.counts > $TTS/barcode$i/barcode$i.3end.minus.LUZ7.peaks.oracle.narrowPeak.counts 
 
 #add RPM values 
-	total_mapped=$(samtools view -c -F4 $clipped/barcode$i.clipped.sorted.bam)
+	total_mapped=$(samtools view -c -F4 $clipped/barcode$i/barcode$i.clipped.sorted.bam)
 
 	awk '{print $1, $2, $3, $4, $5, $6, $7, $8 ,$9, $10, $11, $12, $13, $14, $15, '$total_mapped', 1000000*$14/'$total_mapped'}' $TTS/barcode$i/barcode$i.3end.plus.LUZ7.peaks.oracle.narrowPeak.counts 
 	> $TTS/barcode$i/barcode$i.3end.plus.LUZ7.peaks.oracle.narrowPeak.counts.normalized
