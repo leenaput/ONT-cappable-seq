@@ -56,7 +56,9 @@ for i in $(seq -f %02g 1 12)
 do
 
 	echo "processing barcode$i";
-
+	
+	mkdir $pychopped/barcode$i
+	
 	cdna_classifier.py \
  	-r $pychopped/barcode$i/report.pdf \
   	-u $pychopped/barcode$i/unclassified.fastq \
@@ -108,8 +110,8 @@ Minimap2 (v2.17) was used to map the trimmed reads to the reference genomes and 
 WD=$(pwd)
 cutSSP=$WD/fastq_data/cut_SSP
 genome=$WD/genome_data
-mapped=$WD/mapping_data/mapped
-clipped=$WD/mapping_data/clipped
+mapped=$WD/mapped_data/mapped
+clipped=$WD/mapped_data/clipped
 
 for i in $(seq -f %02g 1 12)
 do
@@ -149,7 +151,7 @@ do
 	# convert alignment format and assess read mapping metrics using samtools (v1.9)
   	samtools view -bS $clipped/barcode$i/barcode$i.clipped.sam -o $clipped/barcode$i/barcode$i.clipped.bam
         samtools sort -o $clipped/barcode$i/barcode$i.clipped.sorted.bam $clipped/barcode$i/barcode$i.clipped.bam
-	samtools index O $clipped/barcode$i/barcode$i.clipped.sorted.bam
+	samtools index $clipped/barcode$i/barcode$i.clipped.sorted.bam
 	samtools flagstat $clipped/barcode$i/barcode$i.clipped.sorted.bam > $clipped/barcode$i/flagstat.txt
 	samtools idxstats $clipped/barcode$i/barcode$i.clipped.sorted.bam > $clipped/barcode$i/idxstats.txt
 
