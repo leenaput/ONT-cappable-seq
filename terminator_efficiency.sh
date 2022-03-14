@@ -27,9 +27,9 @@ do
 
 	#for each peak, extract all the reads in the same orientation that start before it and calculate the coverage for each genomic position
 
-	awk -v TTS="$a" '$2 <- TTS-10' $clipped/barcode04/barcode04.LUZ7.plus.bed > $TTS/barcode04/TE/$a.TTS.barcode04.plus.bed
-	awk -v TTS="$a" '$2 <- TTS-10' $clipped/barcode07/barcode07.LUZ7.plus.bed > $TTS/barcode07/TE/$a.TTS.barcode07.plus.bed
-	awk -v TTS="$a" '$2 <- TTS-10' $clipped/barcode10/barcode10.LUZ7.plus.bed > $TTS/barcode10/TE/$a.TTS.barcode10.plus.bed
+	awk -v TTS="$a" '$2 < TTS-10' $clipped/barcode04/barcode04.LUZ7.plus.bed > $TTS/barcode04/TE/$a.TTS.barcode04.plus.bed
+	awk -v TTS="$a" '$2 < TTS-10' $clipped/barcode07/barcode07.LUZ7.plus.bed > $TTS/barcode07/TE/$a.TTS.barcode07.plus.bed
+	awk -v TTS="$a" '$2 < TTS-10' $clipped/barcode10/barcode10.LUZ7.plus.bed > $TTS/barcode10/TE/$a.TTS.barcode10.plus.bed
 
 	bedtools genomecov -g $genome/LUZ7.genome -i $TTS/barcode04/TE/$a.TTS.barcode04.plus.bed -d > $TTS/barcode04/TE/$a.TTS.plus.coverage
 	bedtools genomecov -g $genome/LUZ7.genome -i $TTS/barcode07/TE/$a.TTS.barcode07.plus.bed -d > $TTS/barcode07/TE/$a.TTS.plus.coverage
