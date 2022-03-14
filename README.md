@@ -404,7 +404,7 @@ do
 	awk '{print $1, $2, $3, $4, $5, $6, $7, $8 ,$9, $10, $11, $12, $13, $14, $15, '$total_mapped', 1000000*$14/'$total_mapped'}' $TTS/barcode$i/barcode$i.3end.plus.LUZ7.peaks.oracle.narrowPeak.counts 
 	> $TTS/barcode$i/barcode$i.3end.plus.LUZ7.peaks.oracle.narrowPeak.counts.normalized
 
-	awk '{print $1, $2, $3, $4, $5, $6, $7, $8 ,$9, $10, $11, $12, $13, $14, $15, '$total_mapped', 1000000*$14/'$total_mapped'}'  $TTS/barcode$i/barcode$i.5end.minus.LUZ7.peaks.oracle.narrowPeak.counts 
+	awk '{print $1, $2, $3, $4, $5, $6, $7, $8 ,$9, $10, $11, $12, $13, $14, $15, '$total_mapped', 1000000*$14/'$total_mapped'}'  $TTS/barcode$i/barcode$i.3end.minus.LUZ7.peaks.oracle.narrowPeak.counts 
 	> $TTS/barcode$i/barcode$i.3end.minus.LUZ7.peaks.oracle.narrowPeak.counts.normalized
 
 done
