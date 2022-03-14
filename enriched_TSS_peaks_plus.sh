@@ -46,8 +46,8 @@ echo "analysing timepoint 10 minutes"
 for b in $t10_plus
 do
 
-	awk -F "," '$13 == "'$b'" {print $1, $2, $3, $13, $5, $9, $12}' $TSS/barcode07/barcode07.5end.plus.LUZ7.peaks.oracle.narrowPeaks.counts.normalized.clustered.csv > $TSS/barcode07/tmp/$b.plus.barcode07.csv
-	awk -F "," '$13 == "'$b'" {print $1, $2, $3, $13, $5, $9, $12}' $TSS/barcode08/barcode08.5end.plus.LUZ7.peaks.oracle.narrowPeaks.counts.normalized.clustered.csv > $TSS/barcode08.tmp/$b.plus.barcode08.csv
+	awk -F "," '$13 == "'$b'" {print $1, $2, $3, $13, $5, $9, $12}' $TSS/barcode07/barcode07.5end.plus.LUZ7.peaks.oracle.narrowPeak.counts.normalized.clustered.csv > $TSS/barcode07/tmp/$b.plus.barcode07.csv
+	awk -F "," '$13 == "'$b'" {print $1, $2, $3, $13, $5, $9, $12}' $TSS/barcode08/barcode08.5end.plus.LUZ7.peaks.oracle.narrowPeak.counts.normalized.clustered.csv > $TSS/barcode08.tmp/$b.plus.barcode08.csv
 
 done
 
@@ -63,8 +63,8 @@ echo "analysing timepoint 20 minutes"
 for c in $t20_plus
 do
 
-        awk -F "," '$13 == "'$c'" {print $1, $2, $3, $13, $5, $9, $12}' $TSS/barcode10/barcode10.5end.plus.LUZ7.peaks.oracle.narrowPeaks.counts.normalized.clustered.csv > $TSS/barcode10/tmp/$b.plus.barcode10.csv
-        awk -F "," '$13 == "'$c'" {print $1, $2, $3, $13, $5, $9, $12}' $TSS/barcode11/barcode11.5end.plus.LUZ7.peaks.oracle.narrowPeaks.counts.normalized.clustered.csv > $TSS/barcode11/tmp/$b.plus.barcode11.csv
+        awk -F "," '$13 == "'$c'" {print $1, $2, $3, $13, $5, $9, $12}' $TSS/barcode10/barcode10.5end.plus.LUZ7.peaks.oracle.narrowPeak.counts.normalized.clustered.csv > $TSS/barcode10/tmp/$b.plus.barcode10.csv
+        awk -F "," '$13 == "'$c'" {print $1, $2, $3, $13, $5, $9, $12}' $TSS/barcode11/barcode11.5end.plus.LUZ7.peaks.oracle.narrowPeak.counts.normalized.clustered.csv > $TSS/barcode11/tmp/$b.plus.barcode11.csv
 
 done
 
