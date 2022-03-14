@@ -54,7 +54,7 @@ done
 	cat $TSS/barcode07/tmp/*.plus.barcode07.csv > $TSS/barcode07/tmp/common_plus_TSS_barcode07.csv
 	cat $TSS/barcode08/tmp/*.plus.barcode08.csv > $TSS/barcode08/tmp/common_plus_TSS_barcode08.csv
 
-	paste -d ' ' $TSS/barcode07/tmp/common_plus_TSS_barcode07.csv $TSS/barcode08/tmp/common_plus_TSS_barcode08.csv | awk -F ' ' '{print $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $7/14}' | sort -g -k 2,2 > $TSS/t10_plus_TSS_ratio.csv
+	paste -d ' ' $TSS/barcode07/tmp/common_plus_TSS_barcode07.csv $TSS/barcode08/tmp/common_plus_TSS_barcode08.csv | awk -F ' ' '{print $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $7/$14}' | sort -g -k 2,2 > $TSS/t10_plus_TSS_ratio.csv
 
 #Extract information of common peaks for timepoint 20 minutes
 
@@ -71,7 +71,7 @@ done
         cat $TSS/barcode10/tmp/*.plus.barcode10.csv > $TSS/barcode10/tmp/common_plus_TSS_barcode10.csv
         cat $TSS/barcode11/tmp/*.plus.barcode11.csv > $TSS/barcode11/tmp/common_plus_TSS_barcode11.csv
 
-        paste -d ' ' $TSS/barcode10/tmp/common_plus_TSS_barcode10.csv $TSS/barcode11/tmp/common_plus_TSS_barcode11.csv | awk -F ' ' '{print $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $7/14}' | sort -g -k 2,2 > $TSS/t20_plus_TSS_ratio.csv
+        paste -d ' ' $TSS/barcode10/tmp/common_plus_TSS_barcode10.csv $TSS/barcode11/tmp/common_plus_TSS_barcode11.csv | awk -F ' ' '{print $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $7/$14}' | sort -g -k 2,2 > $TSS/t20_plus_TSS_ratio.csv
 
 #remove temporary files
 
