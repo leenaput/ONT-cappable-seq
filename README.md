@@ -466,7 +466,7 @@ For each timepoint, this script generates an output file with 8 columns that con
 -	4: genomic position of 3end peak
 -	5: end position of downstream genomic interval to calculate the average coverage across 20bp interval
 -	6: average coverage across 20 bp downstream interval
--	7: ratio of upstream coverage / downstream coverage 
+-	7: ratio of downstream coverage / upstream coverage 
 -	8: TE(%)
 
 
